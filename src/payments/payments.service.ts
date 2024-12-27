@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { envs } from 'src/config';
 import Stripe from 'stripe';
 
@@ -31,10 +31,7 @@ export class PaymentsService {
       });
       return session;
     } catch (error) {
-      return {
-        status: 'ERROR',
-        message: error,
-      };
+      return new InternalServerErrorException(error);
     }
   }
 }
