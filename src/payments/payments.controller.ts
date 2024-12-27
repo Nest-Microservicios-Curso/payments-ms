@@ -1,12 +1,37 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Post } from '@nestjs/common';
 import { PaymentsService } from './payments.service';
 
 @Controller('payments')
 export class PaymentsController {
   constructor(private readonly paymentsService: PaymentsService) {}
 
-  @Get()
-  test() {
-    return { message: 'Payments is running...' };
+  @Get('payment-success')
+  paymentSuccess() {
+    return {
+      ok: true,
+      message: 'Payment successful',
+    };
+  }
+
+  @Get('payment-cancelled')
+  paymentCancelled() {
+    return {
+      ok: false,
+      message: 'Payment cancelled',
+    };
+  }
+
+  @Post('payment-session')
+  paymentSession() {
+    return {
+      message: 'Payment session',
+    };
+  }
+
+  @Post('payment-webhook')
+  paymentWebhook() {
+    return {
+      message: 'Payment webhook',
+    };
   }
 }
