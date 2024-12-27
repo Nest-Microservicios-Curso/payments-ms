@@ -23,9 +23,7 @@ export class PaymentsController {
 
   @Post('payment-session')
   paymentSession() {
-    return {
-      message: 'Payment session',
-    };
+    return this.paymentsService.createSession();
   }
 
   @Post('payment-webhook')
