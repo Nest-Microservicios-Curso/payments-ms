@@ -2,6 +2,7 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { envs } from 'src/config';
 import Stripe from 'stripe';
 import { PaymentSessionDto } from './dto/payment-session.dto';
+import { Request, Response } from 'express';
 
 @Injectable()
 export class PaymentsService {
@@ -34,6 +35,16 @@ export class PaymentsService {
         cancel_url: 'http://localhost:3020/api/payments/payment-cancelled',
       });
       return session;
+    } catch (error) {
+      return new InternalServerErrorException(error);
+    }
+  }
+
+  async paymentWebhook(request: Request, response: Response) {
+    try {
+      const event = request.body;
+      console.log('TYPE:', event.type);
+      console.log('OBJECT:', event);
     } catch (error) {
       return new InternalServerErrorException(error);
     }
