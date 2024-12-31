@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import {
   ArrayMinSize,
   IsArray,
@@ -7,17 +8,18 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-export class PaymentSession {
+export class PaymentSessionDto {
   @IsString()
   currency: string;
 
   @IsArray()
   @ArrayMinSize(1)
   @ValidateNested({ each: true })
-  items: PaymentSessionItems[];
+  @Type(() => PaymentSessionItemsDto)
+  items: PaymentSessionItemsDto[];
 }
 
-export class PaymentSessionItems {
+export class PaymentSessionItemsDto {
   @IsString()
   name: string;
 
