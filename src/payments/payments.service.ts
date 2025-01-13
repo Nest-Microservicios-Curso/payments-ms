@@ -10,7 +10,7 @@ export class PaymentsService {
 
   async createSession(paymentSessionDto: PaymentSessionDto) {
     try {
-      const { currency, items } = paymentSessionDto;
+      const { currency, items, orderId } = paymentSessionDto;
 
       const lineItems = items.map((item) => {
         return {
@@ -26,9 +26,10 @@ export class PaymentsService {
       });
 
       const session = await this.stripe.checkout.sessions.create({
-        // TODO: Acá enviaré el ID de la Orden
         payment_intent_data: {
-          metadata: {},
+          metadata: {
+            orderId: orderId,
+          },
         },
         line_items: lineItems,
         mode: 'payment',
@@ -58,31 +59,17 @@ export class PaymentsService {
         return response.sendStatus(400);
       }
       switch (event.type) {
-        // case 'payment_intent.succeeded':
-        //   const paymentIntent = event.data.object;
-        //   console.log(
-        //     `PaymentIntent for ${paymentIntent.amount} was successful!`,
-        //   );
-        //   // Then define and call a method to handle the successful payment intent.
-        //   // handlePaymentIntentSucceeded(paymentIntent);
-        //   break;
-        // case 'payment_method.attached':
-        //   const paymentMethod = event.data.object;
-        //   // Then define and call a method to handle the successful attachment of a PaymentMethod.
-        //   // handlePaymentMethodAttached(paymentMethod);
-        //   break;
-        case 'charge.updated':
-          const paymentMethod = event.data.object;
-          // Then define and call a method to handle the successful attachment of a PaymentMethod.
-          // handlePaymentMethodAttached(paymentMethod);
+        case 'charge.succeeded':
           console.log(`OK: ${event.type}. Succesfully!`);
+          const chargeSucceeded = event.data.object;
+          console.log({
+            metadata: chargeSucceeded.metadata,
+          });
+
           break;
         default:
-          // Unexpected event type
           console.log(`!!Unhandled event type ${event.type}.`);
       }
-
-      // Return a 200 response to acknowledge receipt of the event
       response.send();
     } catch (error) {
       return new InternalServerErrorException(error);

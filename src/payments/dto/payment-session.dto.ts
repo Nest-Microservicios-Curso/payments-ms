@@ -5,6 +5,7 @@ import {
   IsNumber,
   IsPositive,
   IsString,
+  IsUUID,
   ValidateNested,
 } from 'class-validator';
 
@@ -17,6 +18,10 @@ export class PaymentSessionDto {
   @ValidateNested({ each: true })
   @Type(() => PaymentSessionItemsDto)
   items: PaymentSessionItemsDto[];
+
+  @IsString()
+  @IsUUID()
+  orderId: string;
 }
 
 export class PaymentSessionItemsDto {
