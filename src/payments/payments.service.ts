@@ -33,8 +33,8 @@ export class PaymentsService {
         },
         line_items: lineItems,
         mode: 'payment',
-        success_url: 'http://localhost:3020/api/payments/payment-success',
-        cancel_url: 'http://localhost:3020/api/payments/payment-cancelled',
+        success_url: envs.STRIPE_SUCCESS_URL,
+        cancel_url: envs.STRIPE_CANCEL_URL,
       });
       return session;
     } catch (error) {
@@ -55,7 +55,7 @@ export class PaymentsService {
           envs.STRIPE_WEBHOOK_SECRET,
         );
       } catch (err) {
-        console.log(`⚠️  Webhook signature verification failed.`, err.message);
+        console.log(`⚠️ Webhook signature verification failed.`, err.message);
         return response.sendStatus(400);
       }
       switch (event.type) {
